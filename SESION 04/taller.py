@@ -1,1 +1,106 @@
-
+class CuentaBancaria:
+    def __init__(self, numeroCta, nombreCliente, saldoCta, fechaApertura, ultimoRetiro, ultimaConsignacion):
+        set (numeroCta, nombreCliente, saldoCta, fechaApertura, ultimoRetiro, ultimaConsignacion)
+    
+    def set (self, numeroCta, nombreCliente, saldoCta, fechaApertura, ultimoRetiro, ultimaConsignacion):
+        self.__numeroCta = numeroCta
+        self.__nombreCliente = nombreCliente
+        self.__saldoCta = saldoCta
+        self.__fechaApertura = fechaApertura
+        self.__ultimoRetiro = ultimoRetiro
+        self.__ultimaConsignacion = ultimaConsignacion
+    
+    def set_numeroCta(self, x):
+        self.__numeroCta = x 
+    
+    def set_nombreCliente (self , x):
+        self.__nombreCliente = x 
+        
+    def set_saldoCta (self, x):
+        self.__saldoCta = x
+    
+    def set_fechaApertura (self , x):
+        self.__fechaApertura = x
+    
+    def set_ultimoRetiro (self , x):
+        self.__ultimoRetiro = x
+    
+    def set_ultimaConsignacion (self , x):
+        self.__ultimaConsignacion = x 
+    
+    # Metodos para acceder
+    
+    def get__numeroCta (self):
+        return self.__numeroCta
+        
+    def get_nombreCliente(self):
+        return self.__nombreCliente
+    
+    def get_saldoCta(self):
+        return self.__saldoCta
+    
+    def get_fechaApertura(self):
+        return self.__fechaApertura
+    
+    def get_ultimoRetiro(self):
+        return self.__ultimoRetiro
+    
+    def get_ultimaConsignacion(self):
+        return self.__ultimaConsignacion
+    
+    def mostrar_informacion(self):
+        print(f"Cuenta: {self.__numeroCta}, Cliente: {self.__nombreCliente}, Saldo: {self.__saldoCta}, Fecha Apertura: {self.__fechaApertura}")
+        
+#Funcion para crear un menu
+def menu ():
+    cuentas = {}
+    while True:
+        print ("\n=== BANCO MINÚ ===")
+        print ("1.Crear Cuenta Bancaria.")
+        print ("2.Depositar")
+        print ("3.Retirar.")
+        print ("4.Mostrar informacion Bancaria.")
+        print ("5.Salir.")
+        
+        opcion = input ("Digite una opcion.")
+        
+        if opcion == "1":
+            numeroCta = input("Ingrese el número de cuenta: ")
+            nombreCliente = input("Ingrese su nombre completo: ")
+            saldoCta = float(input("Ingrese su monto inicial: "))
+            fechaApertura = input("Ingrese la fecha de apertura (dd/mm/yyyy): ")
+            cuenta = CuentaBancaria(numeroCta, nombreCliente, saldoCta, fechaApertura, None, None)
+            cuentas[numeroCta] = cuenta
+            print("Cuenta creada exitosamente.")
+        
+        elif opcion == "2":
+            numeroCta = input("Ingrese el número de cuenta: ")
+            if numeroCta in cuentas:
+                monto = float(input("Ingrese el monto a consignar: "))
+                cuentas[numeroCta].consignar(monto)
+            else:
+                print("NO EXISTE.")
+        
+        elif opcion == "3":
+            numeroCta = input("Ingrese el número de cuenta: ")
+            if numeroCta in cuentas:
+                monto = float(input("Ingrese el monto a retirar: "))
+                cuentas[numeroCta].retirar(monto)
+            else:
+                print("NO EXISTE.")
+        
+        elif opcion == "4":
+            numeroCta = input("Ingrese el número de cuenta: ")
+            if numeroCta in cuentas:
+                cuentas[numeroCta].mostrar_informacion()
+            else:
+                print("NO EXISTE.")
+        elif opcion == "5":
+            print("Adios...")
+            break
+        
+        else:
+            print("Opción no válida. Intente nuevamente.")
+    
+# Llamada al menú principal
+menu ()
