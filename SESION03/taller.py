@@ -55,4 +55,35 @@ class CuentaBancaria:
     
     def mostrar_informacion(self):
         print(f"Cuenta: {self.__numeroCta}, Cliente: {self.__nombreCliente}, Saldo: {self.__saldoCta}, Fecha Apertura: {self.__fechaApertura}")
+
+#Funcion para crear un menu
+def menu ():
+    cuentas = {}
+    while True:
+        print ("\n=== BANCO MINÚ ===")
+        print ("1.Crear Cuenta Bancaria.")
+        print ("2.Depositar")
+        print ("3.Retirar.")
+        print ("4.Mostrar informacion Bancaria.")
+        print ("5.Salir.")
+        
+        opcion = imput ("Digite una opcion.")
+        
+        if opcion == "1":
+            numeroCta = input("Ingrese el número de cuenta: ")
+            nombreCliente = input("Ingrese su nombre completo: ")
+            saldoCta = float(input("Ingrese su monto inicial: "))
+            fechaApertura = input("Ingrese la fecha de apertura (dd/mm/yyyy): ")
+            cuenta = CuentaBancaria(numeroCta, nombreCliente, saldoCta, fechaApertura)
+            cuentas[numeroCta] = cuenta
+            print("Cuenta creada exitosamente.")
+        
+         elif opcion == "2":
+            numeroCta = input("Ingrese el número de cuenta: ")
+            if numeroCta in cuentas:
+                monto = float(input("Ingrese el monto a consignar: "))
+                cuentas[numeroCta].consignar(monto)
+            else:
+                print("Cuenta no encontrada.")
+    
         
