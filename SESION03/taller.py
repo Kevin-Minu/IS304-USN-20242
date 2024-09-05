@@ -23,3 +23,36 @@ class CuentaBancaria:
         
     def set_saldoCta (self, x):
         self.__saldoCta = x
+   
+    def set_fechaApertura (self , x):
+        self.__fechaApertura = x
+    
+    def set_ultimoRetiro (self , x):
+        self.__ultimoRetiro = x
+    
+    def set_ultimaConsignacion (self , x):
+        self.__ultimaConsignacion = x 
+    
+    # Metodos para acceder
+    
+    def get__numeroCta (self):
+        return self.__numeroCta
+        
+    def get_nombreCliente(self):
+        return self.__nombreCliente
+    
+    def get_saldoCta(self):
+        return self.__saldoCta
+    
+    def get_fechaApertura(self):
+        return self.__fechaApertura
+    
+    def get_ultimoRetiro(self):
+        return self.__ultimoRetiro
+    
+    def get_ultimaConsignacion(self):
+        return self.__ultimaConsignacion
+    
+    def mostrar_informacion(self):
+        print(f"Cuenta: {self.__numeroCta}, Cliente: {self.__nombreCliente}, Saldo: {self.__saldoCta}, Fecha Apertura: {self.__fechaApertura}")
+        
