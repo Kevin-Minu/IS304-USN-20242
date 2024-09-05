@@ -85,5 +85,27 @@ def menu ():
                 cuentas[numeroCta].consignar(monto)
             else:
                 print("Cuenta no encontrada.")
+        elif opcion == "3":
+            numeroCta = input("Ingrese el número de cuenta: ")
+            if numeroCta in cuentas:
+                monto = float(input("Ingrese el monto a retirar: "))
+                cuentas[numeroCta].retirar(monto)
+            else:
+                print("NO EXISTE.")
+        
+        elif opcion == "4":
+            numeroCta = input("Ingrese el número de cuenta: ")
+            if numeroCta in cuentas:
+                cuentas[numeroCta].mostrar_informacion()
+            else:
+                print("NO EXISTE.")
+        elif opcion == "5":
+            print("Adios...")
+            break
+        
+        else:
+            print("Opción no válida. Intente nuevamente.")
     
+# Llamada al menú principal
+menu ()
         
