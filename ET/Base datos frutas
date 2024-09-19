@@ -1,0 +1,80 @@
+# Lista que actuará como la base de datos
+productos = []
+
+# Función para agregar un producto a la lista
+def agregar_producto(nombre, cantidad):
+    try:
+        # Convertir la cantidad a un número entero
+        cantidad = int(cantidad)
+        producto = {
+            'nombre': nombre,
+            'cantidad': cantidad
+        }
+        productos.append(producto)
+        print(f"Producto '{nombre}' con cantidad '{cantidad}' agregado exitosamente.")
+    except ValueError:
+        print("Error: La cantidad debe ser un número entero.")
+
+# Función para mostrar todos los productos en la lista
+def mostrar_productos():
+    if not productos:
+        print("No hay productos en la lista.")
+    else:
+        for i, producto in enumerate(productos, start=1):
+            print(f"{producto['nombre']}:,{producto['cantidad']}")
+
+# Función para eliminar un producto de la lista por nombre
+def eliminar_producto(nombre):
+    for producto in productos:
+        if producto['nombre'].lower() == nombre.lower():
+            productos.remove(producto)
+            print(f"Producto '{nombre}' eliminado exitosamente.")
+            return
+    print(f"No se encontró el producto '{nombre}'.")
+    
+# Función para mostrar productos con cantidad menor a un valor dado
+def productos_bajos(limite):
+    try:
+        limite = int(limite)
+        productos_bajos = [producto for producto in productos if producto['cantidad'] < limite]
+        if not productos_bajos:
+            print(f"No hay productos con cantidad menor a {limite}.")
+        else:
+            print(f"Productos con cantidad menor a {limite}:")
+            for producto in productos_bajos:
+                print(f"Nombre - {producto['nombre']}, Cantidad - {producto['cantidad']}")
+    except ValueError:
+        print("Error: El límite debe ser un número entero.")
+        
+
+# Ejecutar el menú
+def menu():
+    while True:
+        print("\nSeleccione una opción:")
+        print("1. Agregar producto")
+        print("2. Mostrar productos")
+        print("3. Eliminar producto")
+        print("4. Mostrar productos bajos")
+        print("5. Salir")
+        opcion = input("Ingrese una opción (1/2/3/4/5): ")
+        
+        if opcion == '1':
+            nombre = input("Ingrese el nombre del producto: ")
+            cantidad = input("Ingrese la cantidad del producto: ")
+            agregar_producto(nombre, cantidad)
+        elif opcion == '2':
+            mostrar_productos()
+        elif opcion == '3':
+            nombre = input("Ingrese el nombre del producto a eliminar: ")
+            eliminar_producto(nombre)
+        elif opcion == '4':
+            limite = input("Ingrese el límite de cantidad: ")
+            productos_bajos(limite)
+        elif opcion == '5':
+            print("¡Hasta luego!")
+            break
+        else:
+            print("Opción no válida. Intente nuevamente.")
+
+# Ejecutar el menú
+menu()
