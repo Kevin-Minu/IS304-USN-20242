@@ -1,73 +1,68 @@
-# Diccionario para almacenar productos y sus cantidades
 inventario = {}
-
-# Función para agregar un producto
+    
 def agregar_producto(nombre, cantidad):
-    cantidad = int(cantidad)  # Convertir la cantidad a entero
+    cantidad = int(cantidad)
     if nombre in inventario:
-        inventario[nombre] += cantidad  # Aumentar la cantidad existente
+        inventario[nombre] += cantidad
     else:
-        inventario[nombre] = cantidad  # Agregar nuevo producto
-
-# Función para eliminar una cantidad específica de un producto
+        inventario[nombre] = cantidad
+    
+    # Metodo para mostrar todos los productos
+def mostrar_inventario():
+    print ("Inventario:")
+    for producto in sorted(inventario.keys()):
+            print(f"{producto}: {inventario[producto]}")
+    
+    # Metodo para eliminar un producto por nombre o cierta cantidad
 def eliminar_producto(nombre, cantidad):
     if nombre in inventario:
-        cantidad = int(cantidad)  # Convertir la cantidad a entero
-        if cantidad < inventario[nombre]:  # Si hay más cantidad que la que se desea eliminar
+        cantidad = int(cantidad) 
+        if cantidad <= inventario[nombre]:
             inventario[nombre] -= cantidad
-        else:  # Si se desea eliminar más o igual que la cantidad existente
-            inventario[nombre] = 0  # Establecer a 0 en lugar de eliminar el producto
+        else:
+            inventario[nombre] = 0
 
-# Función para mostrar productos con cantidades bajas
-def verificar_bajas(cantidad_minima):
+    # Metodo para mostrar productos con cantidad menor a un valor dado
+def verificar_bajas (cantidad_minima):
     productos_bajos = {k: v for k, v in inventario.items() if v < cantidad_minima}
-    print(f'Productos con cantidad menor a {cantidad_minima}: {list(productos_bajos.keys())}')
+    print(f"Productos con cantidad menor a {cantidad_minima}: {list(productos_bajos.keys())}")
 
-# Función para mostrar el inventario completo, ordenado alfabéticamente
-def mostrar_inventario():
-    print("Inventario:")
-    for producto in sorted(inventario.keys()):
-        print(f'{producto}: {inventario[producto]}')
-
-# Función principal del programa que acepta comandos en línea
-def gestionar_inventario():
+# Menu para interactuar con el usuario
+def menu ():
     while True:
-        comando = input()  # Captura la entrada del usuario
+        comando = input().strip().lower()
         partes = comando.split()
-
-        if len(partes) == 0:
+        
+        
+        if not partes:
             continue
-
-        accion = partes[0].lower()
-
-        try:
-            if accion == 'agregar' and len(partes) == 3:
-                nombre = partes[1]
+        
+        accion = partes [0] 
+       
+        try: 
+            if accion == 'agregar' and len (partes) == 3:
+                nombre = partes [1]
                 cantidad = int(partes[2])
                 agregar_producto(nombre, cantidad)
-
+        
             elif accion == 'eliminar' and len(partes) == 3:
                 nombre = partes[1]
-                cantidad = int(partes[2])
+                cantidad = int(partes [2])
                 eliminar_producto(nombre, cantidad)
-
-            elif accion == 'mostrar' and len(partes) == 2 and partes[1].lower() == 'inventario':
+            
+            elif accion == 'mostrar' and len (partes) == 2 and partes [1] == 'inventario':
                 mostrar_inventario()
-
+        
             elif accion == 'productos_bajos' and len(partes) == 2:
                 cantidad_minima = int(partes[1])
                 verificar_bajas(cantidad_minima)
-
-            elif accion == 'salir':
-                break
-
-            else:
-                print("Comando no reconocido. Intente de nuevo.")
         
+            elif accion =='salir':
+                break
+        
+            else:
+                continue
+    
         except ValueError:
-            print("Error: asegúrate de ingresar cantidades válidas.")
-
-# Ejecutar el programa
-if __name__ == "__main__":
-    gestionar_inventario()
-
+            print("Error: asegurate de ingresar cantidades validas")
+menu()
