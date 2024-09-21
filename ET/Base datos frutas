@@ -1,54 +1,74 @@
-# Lista que actuará como la base de datos
-productos = []
+class Inventario:
+    def __init__(self):
+        # Lista que actuará como la base de datos
+        self.productos = []
 
-# Función para agregar un producto a la lista
-def agregar_producto(nombre, cantidad):
-    try:
-        # Convertir la cantidad a un número entero
-        cantidad = int(cantidad)
-        producto = {
-            'nombre': nombre,
-            'cantidad': cantidad
-        }
-        productos.append(producto)
-        print(f"Producto '{nombre}' con cantidad '{cantidad}' agregado exitosamente.")
-    except ValueError:
-        print("Error: La cantidad debe ser un número entero.")
+    # Método para agregar un producto
+    def agregar_producto(self, nombre, cantidad):
+        try:
+            cantidad = int(cantidad)
+            producto = {
+                'nombre': nombre,
+                'cantidad': cantidad
+            }
+            self.productos.append(producto)
+            print(f"Producto '{nombre}' con cantidad '{cantidad}' agregado exitosamente.")
+        except ValueError:
+            print("Error: La cantidad debe ser un número entero.")
 
-# Función para mostrar todos los productos en la lista
-def mostrar_productos():
-    if not productos:
-        print("No hay productos en la lista.")
-    else:
-        for i, producto in enumerate(productos, start=1):
-            print(f"{producto['nombre']}:,{producto['cantidad']}")
-
-# Función para eliminar un producto de la lista por nombre
-def eliminar_producto(nombre):
-    for producto in productos:
-        if producto['nombre'].lower() == nombre.lower():
-            productos.remove(producto)
-            print(f"Producto '{nombre}' eliminado exitosamente.")
-            return
-    print(f"No se encontró el producto '{nombre}'.")
-    
-# Función para mostrar productos con cantidad menor a un valor dado
-def productos_bajos(limite):
-    try:
-        limite = int(limite)
-        productos_bajos = [producto for producto in productos if producto['cantidad'] < limite]
-        if not productos_bajos:
-            print(f"No hay productos con cantidad menor a {limite}.")
+    # Método para mostrar todos los productos
+    def mostrar_productos(self):
+        if not self.productos:
+            print("No hay productos en la lista.")
         else:
-            print(f"Productos con cantidad menor a {limite}:")
-            for producto in productos_bajos:
-                print(f"Nombre - {producto['nombre']}, Cantidad - {producto['cantidad']}")
-    except ValueError:
-        print("Error: El límite debe ser un número entero.")
-        
+            for i, producto in enumerate(self.productos, start=1):
+                print(f"Producto {i}: Nombre - {producto['nombre']}, Cantidad - {producto['cantidad']}")
 
-# Ejecutar el menú
+    # Método para eliminar un producto por nombre o cierta cantidad
+    def eliminar_producto(self, nombre):
+        for producto in self.productos:
+            if producto['nombre'].lower() == nombre.lower():
+                print(f"Producto encontrado: {producto['nombre']} con cantidad {producto['cantidad']}")
+                opcion = input("¿Desea eliminar todo el producto o una cantidad específica? (todo/cantidad): ").lower()
+
+                if opcion == "todo":
+                    self.productos.remove(producto)
+                    print(f"Producto '{nombre}' eliminado completamente.")
+                elif opcion == "cantidad":
+                    try:
+                        cantidad_eliminar = int(input(f"Ingrese la cantidad a eliminar (máximo {producto['cantidad']}): "))
+                        if cantidad_eliminar <= producto['cantidad']:
+                            producto['cantidad'] -= cantidad_eliminar
+                            print(f"Se eliminaron {cantidad_eliminar} unidades de '{nombre}'. Cantidad restante: {producto['cantidad']}.")
+                            if producto['cantidad'] == 0:
+                                self.productos.remove(producto)
+                                print(f"Producto '{nombre}' eliminado completamente porque no hay más unidades.")
+                        else:
+                            print(f"Error: No se puede eliminar más de {producto['cantidad']} unidades.")
+                    except ValueError:
+                        print("Error: La cantidad debe ser un número entero.")
+                else:
+                    print("Opción no válida. Intente nuevamente.")
+                return
+        print(f"No se encontró el producto '{nombre}'.")
+
+    # Método para mostrar productos con cantidad menor a un valor dado
+    def productos_bajos(self, limite):
+        try:
+            limite = int(limite)
+            productos_bajos = [producto for producto in self.productos if producto['cantidad'] < limite]
+            if not productos_bajos:
+                print(f"No hay productos con cantidad menor a {limite}.")
+            else:
+                print(f"Productos con cantidad menor a {limite}:")
+                for producto in productos_bajos:
+                    print(f"Nombre - {producto['nombre']}, Cantidad - {producto['cantidad']}")
+        except ValueError:
+            print("Error: El límite debe ser un número entero.")
+
+# Menú para interactuar con el usuario
 def menu():
+    inventario = Inventario()
     while True:
         print("\nSeleccione una opción:")
         print("1. Agregar producto")
@@ -61,15 +81,15 @@ def menu():
         if opcion == '1':
             nombre = input("Ingrese el nombre del producto: ")
             cantidad = input("Ingrese la cantidad del producto: ")
-            agregar_producto(nombre, cantidad)
+            inventario.agregar_producto(nombre, cantidad)
         elif opcion == '2':
-            mostrar_productos()
+            inventario.mostrar_productos()
         elif opcion == '3':
             nombre = input("Ingrese el nombre del producto a eliminar: ")
-            eliminar_producto(nombre)
+            inventario.eliminar_producto(nombre)
         elif opcion == '4':
             limite = input("Ingrese el límite de cantidad: ")
-            productos_bajos(limite)
+            inventario.productos_bajos(limite)
         elif opcion == '5':
             print("¡Hasta luego!")
             break
