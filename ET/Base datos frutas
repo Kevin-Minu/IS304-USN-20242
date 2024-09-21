@@ -1,100 +1,73 @@
-class Inventario:
-    def __init__(self):
-        # Lista que actuará como la base de datos
-        self.productos = []
+# Diccionario para almacenar productos y sus cantidades
+inventario = {}
 
-    # Método para agregar un producto
-    def agregar_producto(self, nombre, cantidad):
-        try:
-            cantidad = int(cantidad)
-            producto = {
-                'nombre': nombre,
-                'cantidad': cantidad
-            }
-            self.productos.append(producto)
-            print(f"Producto '{nombre}' con cantidad '{cantidad}' agregado exitosamente.")
-        except ValueError:
-            print("Error: La cantidad debe ser un número entero.")
+# Función para agregar un producto
+def agregar_producto(nombre, cantidad):
+    cantidad = int(cantidad)  # Convertir la cantidad a entero
+    if nombre in inventario:
+        inventario[nombre] += cantidad  # Aumentar la cantidad existente
+    else:
+        inventario[nombre] = cantidad  # Agregar nuevo producto
 
-    # Método para mostrar todos los productos
-    def mostrar_productos(self):
-        if not self.productos:
-            print("No hay productos en la lista.")
-        else:
-            for i, producto in enumerate(self.productos, start=1):
-                print(f"Producto {i}: Nombre - {producto['nombre']}, Cantidad - {producto['cantidad']}")
+# Función para eliminar una cantidad específica de un producto
+def eliminar_producto(nombre, cantidad):
+    if nombre in inventario:
+        cantidad = int(cantidad)  # Convertir la cantidad a entero
+        if cantidad < inventario[nombre]:  # Si hay más cantidad que la que se desea eliminar
+            inventario[nombre] -= cantidad
+        else:  # Si se desea eliminar más o igual que la cantidad existente
+            inventario[nombre] = 0  # Establecer a 0 en lugar de eliminar el producto
 
-    # Método para eliminar un producto por nombre o cierta cantidad
-    def eliminar_producto(self, nombre):
-        for producto in self.productos:
-            if producto['nombre'].lower() == nombre.lower():
-                print(f"Producto encontrado: {producto['nombre']} con cantidad {producto['cantidad']}")
-                opcion = input("¿Desea eliminar todo el producto o una cantidad específica? (todo/cantidad): ").lower()
+# Función para mostrar productos con cantidades bajas
+def verificar_bajas(cantidad_minima):
+    productos_bajos = {k: v for k, v in inventario.items() if v < cantidad_minima}
+    print(f'Productos con cantidad menor a {cantidad_minima}: {list(productos_bajos.keys())}')
 
-                if opcion == "todo":
-                    self.productos.remove(producto)
-                    print(f"Producto '{nombre}' eliminado completamente.")
-                elif opcion == "cantidad":
-                    try:
-                        cantidad_eliminar = int(input(f"Ingrese la cantidad a eliminar (máximo {producto['cantidad']}): "))
-                        if cantidad_eliminar <= producto['cantidad']:
-                            producto['cantidad'] -= cantidad_eliminar
-                            print(f"Se eliminaron {cantidad_eliminar} unidades de '{nombre}'. Cantidad restante: {producto['cantidad']}.")
-                            if producto['cantidad'] == 0:
-                                self.productos.remove(producto)
-                                print(f"Producto '{nombre}' eliminado completamente porque no hay más unidades.")
-                        else:
-                            print(f"Error: No se puede eliminar más de {producto['cantidad']} unidades.")
-                    except ValueError:
-                        print("Error: La cantidad debe ser un número entero.")
-                else:
-                    print("Opción no válida. Intente nuevamente.")
-                return
-        print(f"No se encontró el producto '{nombre}'.")
+# Función para mostrar el inventario completo, ordenado alfabéticamente
+def mostrar_inventario():
+    print("Inventario:")
+    for producto in sorted(inventario.keys()):
+        print(f'{producto}: {inventario[producto]}')
 
-    # Método para mostrar productos con cantidad menor a un valor dado
-    def productos_bajos(self, limite):
-        try:
-            limite = int(limite)
-            productos_bajos = [producto for producto in self.productos if producto['cantidad'] < limite]
-            if not productos_bajos:
-                print(f"No hay productos con cantidad menor a {limite}.")
-            else:
-                print(f"Productos con cantidad menor a {limite}:")
-                for producto in productos_bajos:
-                    print(f"Nombre - {producto['nombre']}, Cantidad - {producto['cantidad']}")
-        except ValueError:
-            print("Error: El límite debe ser un número entero.")
-
-# Menú para interactuar con el usuario
-def menu():
-    inventario = Inventario()
+# Función principal del programa que acepta comandos en línea
+def gestionar_inventario():
     while True:
-        print("\nSeleccione una opción:")
-        print("1. Agregar producto")
-        print("2. Mostrar productos")
-        print("3. Eliminar producto")
-        print("4. Mostrar productos bajos")
-        print("5. Salir")
-        opcion = input("Ingrese una opción (1/2/3/4/5): ")
-        
-        if opcion == '1':
-            nombre = input("Ingrese el nombre del producto: ")
-            cantidad = input("Ingrese la cantidad del producto: ")
-            inventario.agregar_producto(nombre, cantidad)
-        elif opcion == '2':
-            inventario.mostrar_productos()
-        elif opcion == '3':
-            nombre = input("Ingrese el nombre del producto a eliminar: ")
-            inventario.eliminar_producto(nombre)
-        elif opcion == '4':
-            limite = input("Ingrese el límite de cantidad: ")
-            inventario.productos_bajos(limite)
-        elif opcion == '5':
-            print("¡Hasta luego!")
-            break
-        else:
-            print("Opción no válida. Intente nuevamente.")
+        comando = input()  # Captura la entrada del usuario
+        partes = comando.split()
 
-# Ejecutar el menú
-menu()
+        if len(partes) == 0:
+            continue
+
+        accion = partes[0].lower()
+
+        try:
+            if accion == 'agregar' and len(partes) == 3:
+                nombre = partes[1]
+                cantidad = int(partes[2])
+                agregar_producto(nombre, cantidad)
+
+            elif accion == 'eliminar' and len(partes) == 3:
+                nombre = partes[1]
+                cantidad = int(partes[2])
+                eliminar_producto(nombre, cantidad)
+
+            elif accion == 'mostrar' and len(partes) == 2 and partes[1].lower() == 'inventario':
+                mostrar_inventario()
+
+            elif accion == 'productos_bajos' and len(partes) == 2:
+                cantidad_minima = int(partes[1])
+                verificar_bajas(cantidad_minima)
+
+            elif accion == 'salir':
+                break
+
+            else:
+                print("Comando no reconocido. Intente de nuevo.")
+        
+        except ValueError:
+            print("Error: asegúrate de ingresar cantidades válidas.")
+
+# Ejecutar el programa
+if __name__ == "__main__":
+    gestionar_inventario()
+
