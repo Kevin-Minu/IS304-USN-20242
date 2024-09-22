@@ -52,7 +52,7 @@ public class Sudoku {
             }
             System.out.println();
             if (i % 3 == 2) {
-                System.out.println("  -----------------------");
+                System.out.println("  ---------------------");
             }
         }
     }
@@ -213,7 +213,15 @@ public class Sudoku {
             System.out.println("4. Guardar partida actual");
             System.out.println("5. Salir");
             System.out.print("Seleccione una opción: ");
-            int option = scanner.nextInt();
+            int option = -1;
+
+            try {
+                option = scanner.nextInt();
+            } catch (Exception e) {
+                System.out.println("Entrada inválida. Por favor, ingrese un número entero.");
+                scanner.next(); // Limpiar el input inválido
+                continue;
+            }
 
             switch (option) {
                 case 1:
@@ -221,8 +229,24 @@ public class Sudoku {
                     break;
                 case 2:
                     initializeBoard();
-                    Random rand = new Random();
-                    int fixedCells = rand.nextInt(MAX_VALUES - MIN_VALUES + 1) + MIN_VALUES;
+                    int fixedCells = 0;
+                    boolean validInput = false;
+
+                    // Ciclo para asegurarse de que el usuario ingrese un valor válido
+                    while (!validInput) {
+                        System.out.print("Ingrese la cantidad de celdas fijas que desea (entre " + MIN_VALUES + " y " + MAX_VALUES + "): ");
+                        try {
+                            fixedCells = scanner.nextInt();
+                            if (fixedCells >= MIN_VALUES && fixedCells <= MAX_VALUES) {
+                                validInput = true; // Entrada válida
+                            } else {
+                                System.out.println("Por favor, ingrese un valor entre " + MIN_VALUES + " y " + MAX_VALUES + ".");
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Entrada inválida. Por favor, ingrese un número entero.");
+                            scanner.next(); // Limpiar el input inválido
+                        }
+                    }
                     fillBoard(fixedCells);
                     break;
                 case 3:
@@ -235,8 +259,8 @@ public class Sudoku {
                     System.out.println("Saliendo...");
                     return;
                 default:
-                    System.out.println("Opción no válida.");
-                    continue;
+                    System.out.println("Opción no válida. Por favor, seleccione una opción del 1 al 5.");
+                    break;
             }
 
             boolean continueInput = true;
@@ -245,12 +269,56 @@ public class Sudoku {
                 System.out.println("Tablero actual:");
                 printBoard();
 
-                System.out.print("Ingrese la fila (0-8): ");
-                int row = scanner.nextInt();
-                System.out.print("Ingrese la columna (0-8): ");
-                int col = scanner.nextInt();
-                System.out.print("Ingrese el valor (1-9): ");
-                int value = scanner.nextInt();
+                int row = -1, col = -1, value = -1;
+                boolean validRow = false, validCol = false, validValue = false;
+
+                // Solicitar fila
+                while (!validRow) {
+                    System.out.print("Ingrese la fila (0-8): ");
+                    try {
+                        row = scanner.nextInt();
+                        if (row >= 0 && row < SIZE) {
+                            validRow = true;
+                        } else {
+                            System.out.println("Fila inválida. Ingrese un valor entre 0 y 8.");
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Entrada inválida. Por favor, ingrese un número entero para la fila.");
+                        scanner.next(); // Limpiar el input inválido
+                    }
+                }
+
+                // Solicitar columna
+                while (!validCol) {
+                    System.out.print("Ingrese la columna (0-8): ");
+                    try {
+                        col = scanner.nextInt();
+                        if (col >= 0 && col < SIZE) {
+                            validCol = true;
+                        } else {
+                            System.out.println("Columna inválida. Ingrese un valor entre 0 y 8.");
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Entrada inválida. Por favor, ingrese un número entero para la columna.");
+                        scanner.next(); // Limpiar el input inválido
+                    }
+                }
+
+                // Solicitar valor
+                while (!validValue) {
+                    System.out.print("Ingrese el valor (1-9): ");
+                    try {
+                        value = scanner.nextInt();
+                        if (value >= 1 && value <= SIZE) {
+                            validValue = true;
+                        } else {
+                            System.out.println("Valor inválido. Ingrese un número entre 1 y 9.");
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Entrada inválida. Por favor, ingrese un número entero para el valor.");
+                        scanner.next(); // Limpiar el input inválido
+                    }
+                }
 
                 boolean result = setCell(row, col, value);
                 if (result) {
@@ -259,6 +327,7 @@ public class Sudoku {
                     System.out.println("No se pudo colocar el valor.");
                 }
 
+                // Preguntar si el usuario quiere seguir ingresando valores
                 System.out.print("¿Desea ingresar otro valor? (s/n): ");
                 String response = scanner.next();
                 if (response.equalsIgnoreCase("n")) {
@@ -268,6 +337,7 @@ public class Sudoku {
         }
     }
 
+    // Método principal
     public static void main(String[] args) {
         Sudoku sudoku = new Sudoku();
         sudoku.menu();
