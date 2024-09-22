@@ -124,7 +124,7 @@ public class Sudoku {
         return true;
     }
 
-    // Método para verificar y notificar si se ha completado una fila, columna o subcuadro
+    // Método para verificar y notificar si se ha completado una fila, columna o subcuadro 3x3
     private void checkCompletion(int row, int col) {
         if (isRowComplete(row)) {
             System.out.println("¡Fila " + row + " completada!");
@@ -238,9 +238,9 @@ public class Sudoku {
                         try {
                             fixedCells = scanner.nextInt();
                             if (fixedCells >= MIN_VALUES && fixedCells <= MAX_VALUES) {
-                                validInput = true; // Entrada válida
+                                validInput = true;
                             } else {
-                                System.out.println("Por favor, ingrese un valor entre " + MIN_VALUES + " y " + MAX_VALUES + ".");
+                                System.out.println("Número fuera de rango. Por favor, ingrese un valor entre " + MIN_VALUES + " y " + MAX_VALUES + ".");
                             }
                         } catch (Exception e) {
                             System.out.println("Entrada inválida. Por favor, ingrese un número entero.");
@@ -269,56 +269,26 @@ public class Sudoku {
                 System.out.println("Tablero actual:");
                 printBoard();
 
-                int row = -1, col = -1, value = -1;
-                boolean validRow = false, validCol = false, validValue = false;
+                System.out.print("Ingrese la fila (0-8) o escriba 'menu', 'guardar', 'cargar': ");
+                String inputRow = scanner.next();
+                if (handleSpecialCommands(inputRow)) continue;
 
-                // Solicitar fila
-                while (!validRow) {
-                    System.out.print("Ingrese la fila (0-8): ");
-                    try {
-                        row = scanner.nextInt();
-                        if (row >= 0 && row < SIZE) {
-                            validRow = true;
-                        } else {
-                            System.out.println("Fila inválida. Ingrese un valor entre 0 y 8.");
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Entrada inválida. Por favor, ingrese un número entero para la fila.");
-                        scanner.next(); // Limpiar el input inválido
-                    }
-                }
+                int row = getIntInput(inputRow, "fila", 0, SIZE - 1);
+                if (row == -1) continue;
 
-                // Solicitar columna
-                while (!validCol) {
-                    System.out.print("Ingrese la columna (0-8): ");
-                    try {
-                        col = scanner.nextInt();
-                        if (col >= 0 && col < SIZE) {
-                            validCol = true;
-                        } else {
-                            System.out.println("Columna inválida. Ingrese un valor entre 0 y 8.");
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Entrada inválida. Por favor, ingrese un número entero para la columna.");
-                        scanner.next(); // Limpiar el input inválido
-                    }
-                }
+                System.out.print("Ingrese la columna (0-8): ");
+                String inputCol = scanner.next();
+                if (handleSpecialCommands(inputCol)) continue;
 
-                // Solicitar valor
-                while (!validValue) {
-                    System.out.print("Ingrese el valor (1-9): ");
-                    try {
-                        value = scanner.nextInt();
-                        if (value >= 1 && value <= SIZE) {
-                            validValue = true;
-                        } else {
-                            System.out.println("Valor inválido. Ingrese un número entre 1 y 9.");
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Entrada inválida. Por favor, ingrese un número entero para el valor.");
-                        scanner.next(); // Limpiar el input inválido
-                    }
-                }
+                int col = getIntInput(inputCol, "columna", 0, SIZE - 1);
+                if (col == -1) continue;
+
+                System.out.print("Ingrese el valor (1-9): ");
+                String inputValue = scanner.next();
+                if (handleSpecialCommands(inputValue)) continue;
+
+                int value = getIntInput(inputValue, "valor", 1, SIZE);
+                if (value == -1) continue;
 
                 boolean result = setCell(row, col, value);
                 if (result) {
@@ -334,6 +304,38 @@ public class Sudoku {
                     continueInput = false;
                 }
             }
+        }
+    }
+
+    // Método para manejar comandos especiales como 'menu', 'guardar' o 'cargar'
+    private boolean handleSpecialCommands(String input) {
+        switch (input.toLowerCase()) {
+            case "menu":
+                menu();
+                return true;
+            case "guardar":
+                saveBoard();
+                return true;
+            case "cargar":
+                loadBoard();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    // Método para validar y convertir entradas a enteros
+    private int getIntInput(String input, String field, int min, int max) {
+        try {
+            int value = Integer.parseInt(input);
+            if (value < min || value > max) {
+                System.out.println("Entrada inválida para " + field + ". Ingrese un valor entre " + min + " y " + max + ".");
+                return -1;
+            }
+            return value;
+        } catch (NumberFormatException e) {
+            System.out.println("Entrada inválida. Por favor, ingrese un número entero para " + field + ".");
+            return -1;
         }
     }
 
