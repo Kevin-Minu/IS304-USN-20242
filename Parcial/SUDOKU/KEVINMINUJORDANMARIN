@@ -206,7 +206,7 @@ public class Sudoku {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\nMenu:");
+            System.out.println("\nSUDOKU M.C.");
             System.out.println("1. Empezar con el tablero vacío");
             System.out.println("2. Empezar con valores fijos (9 a 21)");
             System.out.println("3. Cargar partida guardada");
